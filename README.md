@@ -31,3 +31,24 @@ dart pub run build_runner build
 
   - [ ] [retrofit_generator](https://pub.dev/packages/retrofit_generator)
   The code generation component specifically designed for the retrofit package. It handles the creation of type-safe clients based on your defined interfaces.
+
+  - [ ] [freezed](https://pub.dev/packages/freezed)
+  code generator for data classes, unions, and cloning
+
+  > [!NOTE]
+  > To use Freezed, you will need your typical build_runner/code-generator setup.
+  
+  First, install build_runner and Freezed by adding them to your pubspec.yaml file:
+
+  ````
+  flutter pub add freezed_annotation
+  flutter pub add dev:build_runner
+  flutter pub add dev:freezed
+  ````
+
+  # if using freezed to generate fromJson/toJson, also add:
+
+  ````
+  flutter pub add json_annotation
+  flutter pub add dev:json_serializable
+  ````
