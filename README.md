@@ -46,7 +46,7 @@ dart pub run build_runner build
   flutter pub add dev:freezed
   ````
 
-  # if using freezed to generate fromJson/toJson, also add:
+  #### if using freezed to generate fromJson/toJson, also add:
 
   ````
   flutter pub add json_annotation
