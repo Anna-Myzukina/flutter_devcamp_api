@@ -63,8 +63,7 @@ class _PostService implements PostService {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(post.toJson());
+    final _data = post;
     final _options = _setStreamType<Post>(Options(
       method: 'POST',
       headers: _headers,
@@ -100,8 +99,7 @@ class _PostService implements PostService {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(post.toJson());
+    final _data = post;
     final _options = _setStreamType<Post>(Options(
       method: 'PUT',
       headers: _headers,

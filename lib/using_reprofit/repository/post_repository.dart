@@ -1,12 +1,12 @@
-import '../api/post_service.dart';
+import '../data/services/post_service.dart';
 import '../model/post.dart';
 
-class PostNormalRepository {
+class PostRepository {
   final PostService postService;
 
-  PostNormalRepository(this.postService);
+  PostRepository(this.postService);
 
-  Future<List<Post>> fetchPosts() => postService.fetchPosts();
+  Future<List<Post>> fetchPosts() => postService.getPosts();
 
   Future<Post> createPost(Post post) => postService.createPost(post);
 

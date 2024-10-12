@@ -17,7 +17,7 @@ class _ViewPostsScreenState extends State<ViewPostsScreen> {
   @override
   void initState() {
     super.initState();
-    futurePosts = postService.fetchPost();
+    futurePosts = postService.fetchPosts();
   }
 
   @override
@@ -50,7 +50,8 @@ class _ViewPostsScreenState extends State<ViewPostsScreen> {
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) =>  UpdatePostScreen(post:post),
+                              builder: (context) =>
+                                  UpdatePostScreen(post: post),
                             ),
                           );
                         },
@@ -61,7 +62,7 @@ class _ViewPostsScreenState extends State<ViewPostsScreen> {
                           try {
                             await postService.deletePost(post.id);
                             setState(() {
-                              futurePosts = postService.fetchPost();
+                              futurePosts = postService.fetchPosts();
                             });
                           } catch (e) {
                             debugPrint(e.toString());

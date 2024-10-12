@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_devcamp_api/normal_http/model/post.dart';
 import 'package:retrofit/retrofit.dart';
 
+import '../../model/post.dart';
 
 part 'post_service.g.dart';
 
