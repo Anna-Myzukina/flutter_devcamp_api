@@ -34,7 +34,7 @@ class _ViewPostsScreenState extends State<ViewPostsScreen> {
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text('No posts available'));
           } else {
-            final posts = snapshot.data!;
+            final List<Post> posts = snapshot.data!;
             return ListView.builder(
               itemCount: posts.length,
               itemBuilder: (context, index) {
