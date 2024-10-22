@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_devcamp_api/normal_http/api/getlocation_service.dart';
+import 'package:flutter_devcamp_api/services/getlocation_service.dart';
 import 'package:flutter_devcamp_api/normal_http/model/hourly_weather_model.dart';
 import 'package:flutter_devcamp_api/normal_http/model/weather_model.dart';
 import 'package:flutter_devcamp_api/normal_http/model/weekly_weather_model.dart';
@@ -69,6 +69,7 @@ class WeatherService {
     final response = await _fetchData(url);
     return WeatherModel.fromJson(response);
   }
+
 
  //! Build urls
   static String _constructWeatherUrl() =>

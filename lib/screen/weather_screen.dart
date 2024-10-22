@@ -1,127 +1,112 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_devcamp_api/normal_http/providers/get_current_weather_provider.dart';
-import 'package:flutter_devcamp_api/src/time_converter.dart';
-import 'package:flutter_devcamp_api/widgets/weather_info_widget.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_devcamp_api/widgets/weather_display_widget.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 
-// class WeatherScreen extends StatefulWidget {
-//   const WeatherScreen({super.key});
-
-//   @override
-//   State<WeatherScreen> createState() => _WeatherScreenState();
-// }
-
-// class _WeatherScreenState extends State<WeatherScreen> {
-// @override
-// Widget build(BuildContext context) {
-//   double customWidth = MediaQuery.of(context).size.width;
-//   return Scaffold(
-//     backgroundColor: const Color(0xFF2b2e54),
-//     body: Padding(
-//       padding: EdgeInsets.symmetric(
-//       horizontal: customWidth * 0.1),
-//       child: const Column(
-//         crossAxisAlignment: CrossAxisAlignment.center,
-//         children: [
-//           SizedBox(
-//             height: 650,
-//             //width: customWidth * 0.8,
-//             child: WeatherInfoWidget(),
-//           ),
-//         ],
-//       ),
-//     ),
-//   );
-// }
-
-//}
-
-class WeatherScreen extends ConsumerWidget {
+class WeatherScreen extends StatefulWidget {
   const WeatherScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final weatherData = ref.watch(currentWeatherProvider);
-
-    return weatherData.when(
-        data: (weather) {
-          return Scaffold(
-            backgroundColor: const Color(0xFF2b2e54),
-            body: Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child: Padding(
-                padding: EdgeInsets.only(
-                  left: 24.0,
-                  right: 24.0,
-                  top: 36.0,
-                ),
-                child: CustomScrollView(
-                  slivers: [
-                    SliverList(
-                      delegate: SliverChildListDelegate(
-                       [
-                        Column(
-                         crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const SizedBox(
-                                width: double.infinity,
-                              ),
-                              // Country name text
-                              Text(
-                                weather.name,
-                                style: TextStyle(color: Colors.white, fontSize: 15),
-                              ),
-            
-                              const SizedBox(height: 20),
-            
-                              // Today's date
-                              Text(
-                                DateTime.now().dateTime,
-                                style: TextStyle(color: Colors.white, fontSize: 15),
-                              ),
-            
-                              const SizedBox(height: 30),
-            
-                               // Weather icon big
-                              SizedBox(
-                                height: 260,
-                                child: Image.asset(
-                                  'assets/icons/${weather.weatherDataModel[0].icon.replaceAll('n', 'd')}.png',
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-            
-                              const SizedBox(height: 30),
-            
-                               // Weather description
-                              Text(
-                                weather.weatherDataModel[0].description.toUpperCase(),
-                                style: TextStyle(color: Colors.white, fontSize: 15),
-                              ),
-                          ],
-                        )
-                       ]
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-         error: (error, stackTrace) {
-        return const Center(
-          child: Text(
-            'An error has occurred',
-          ),
-        );
-      },
-      loading: () {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
-  }
+  State<WeatherScreen> createState() => _WeatherScreenState();
 }
+
+class _WeatherScreenState extends State<WeatherScreen> {
+
+    String? _currentAddress;
+    Position? _currentPosition;
+
+    Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Location services are disabled. Please enable the services')));
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')));
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Location permissions are permanently denied, we cannot request permissions.')));
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> _getCurrentPosition() async {
+    final hasPermission = await _handleLocationPermission();
+    if (!hasPermission) return;
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((Position position) {
+      setState(() => _currentPosition = position);
+      // Log the coordinates
+
+    print('Current Position: Latitude: ${_currentPosition!.latitude}, Longitude: ${_currentPosition!.longitude}');
+      
+      _getAddressFromLatLng(_currentPosition!);
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentPosition(); // Automatically fetch location on app start
+  }
+
+  Future<void> _getAddressFromLatLng(Position position) async {
+    await placemarkFromCoordinates(
+        position.latitude, position.longitude).then((List<Placemark> placemarks) {
+      Placemark place = placemarks[0];
+      setState(() {
+        _currentAddress =
+            '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}, ${place.country}';
+      });
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+
+@override
+Widget build(BuildContext context) {
+  double customWidth = MediaQuery.of(context).size.width;
+  return Scaffold(
+    backgroundColor: const Color(0xFF2b2e54),
+    body: Padding(
+      padding: EdgeInsets.symmetric(
+      horizontal: customWidth * 0.1),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 60,
+          ),
+          Text('ADDRESS: ${_currentAddress ?? ""}',
+          style: TextStyle(
+            color: Colors.white
+          ),
+          ),
+          SizedBox(
+            //height: 650,
+            //width: customWidth * 0.8,
+            child: WeatherDisplayWidget(),
+          ),
+          
+        ],
+      ),
+    ),
+  );
+}
+
+}
+
+
