@@ -1,1 +1,1 @@
-const String apiKey = 'bd8651795d7fceacc3ce1a07d28181b2';
+const String apiKey = 'API KEY SHOULD BE HERE';
