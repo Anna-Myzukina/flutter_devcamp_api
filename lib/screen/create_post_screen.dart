@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../normal_http/api/post_service.dart';
-import '../normal_http/model/post.dart';
+import '../normal_http/model/post_model.dart';
 
 class CreatePostScreen extends StatefulWidget {
   const CreatePostScreen({super.key});
@@ -18,7 +18,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   final TextEditingController _bodyController = TextEditingController();
   final PostService postService = PostService();
   final Random _random = Random();
-  Post? post;
+  PostModel? post;
   bool isPosting = false;
 
   void createPost() async {
@@ -26,14 +26,14 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       setState(() {
         isPosting = true;
       });
-      Post newPost = Post(
+      PostModel newPost = PostModel(
         id: _random.nextInt(10000) + 101,
         userId: 1,
         title: _titleController.text,
         body: _bodyController.text,
       );
       try {
-        Post createdPost = await postService.createPost(newPost);
+        PostModel createdPost = await postService.createPost(newPost);
         setState(() {
           post = createdPost;
         });

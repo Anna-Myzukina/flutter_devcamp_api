@@ -2,23 +2,23 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import '../model/post.dart';
+import '../model/post_model.dart';
 import 'package:http/http.dart' as http;
 
 class PostService {
   var url = 'https://jsonplaceholder.typicode.com';
 
-  Future<List<Post>> fetchPosts() async {
+  Future<List<PostModel>> fetchPosts() async {
     final response = await http.get(Uri.parse('$url/posts'));
     if (response.statusCode == 200) {
       List jsonResponse = jsonDecode(response.body);
-      return jsonResponse.map((data) => Post.fromJson(data)).toList();
+      return jsonResponse.map((data) => PostModel.fromJson(data)).toList();
     } else {
       throw Exception('Failed to load posts');
     }
   }
 
-  Future<Post> createPost(Post post) async {
+  Future<PostModel> createPost(PostModel post) async {
     try {
       final response = await http.post(
         Uri.parse('$url/posts'),
@@ -27,7 +27,7 @@ class PostService {
       );
 
       if (response.statusCode == 201) {
-        return Post.fromJson(jsonDecode(response.body));
+        return PostModel.fromJson(jsonDecode(response.body));
       } else {
         throw Exception(
           'Failed to create post: ${response.statusCode} ${response.body}',
@@ -39,7 +39,7 @@ class PostService {
     }
   }
 
-  Future<Post> updatePost(int id, Post post) async {
+  Future<PostModel> updatePost(int id, PostModel post) async {
     final response = await http.put(
       Uri.parse('$url/posts/$id'),
       headers: {"Content-Type": "application/json"},
@@ -47,7 +47,7 @@ class PostService {
     );
 
     if (response.statusCode == 200) {
-      return Post.fromJson(jsonDecode(response.body));
+      return PostModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to update post');
     }

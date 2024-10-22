@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_devcamp_api/screen/update_post_screen.dart';
 import '../normal_http/api/post_service.dart';
-import '../normal_http/model/post.dart';
+import '../normal_http/model/post_model.dart';
 
 class ViewPostsScreen extends StatefulWidget {
   const ViewPostsScreen({super.key});
@@ -12,7 +12,7 @@ class ViewPostsScreen extends StatefulWidget {
 
 class _ViewPostsScreenState extends State<ViewPostsScreen> {
   final PostService postService = PostService();
-  late Future<List<Post>> futurePosts;
+  late Future<List<PostModel>> futurePosts;
 
   @override
   void initState() {
@@ -24,7 +24,7 @@ class _ViewPostsScreenState extends State<ViewPostsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('All Posts')),
-      body: FutureBuilder<List<Post>>(
+      body: FutureBuilder<List<PostModel>>(
         future: futurePosts,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -34,7 +34,7 @@ class _ViewPostsScreenState extends State<ViewPostsScreen> {
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text('No posts available'));
           } else {
-            final List<Post> posts = snapshot.data!;
+            final List<PostModel> posts = snapshot.data!;
             return ListView.builder(
               itemCount: posts.length,
               itemBuilder: (context, index) {

@@ -1,16 +1,16 @@
 import '../api/post_service.dart';
-import '../model/post.dart';
+import '../model/post_model.dart';
 
 class PostNormalRepository {
   final PostService postService;
 
   PostNormalRepository(this.postService);
 
-  Future<List<Post>> fetchPosts() => postService.fetchPosts();
+  Future<List<PostModel>> fetchPosts() => postService.fetchPosts();
 
-  Future<Post> createPost(Post post) => postService.createPost(post);
+  Future<PostModel> createPost(PostModel post) => postService.createPost(post);
 
-  Future<Post> updatePost(int id, Post post) =>
+  Future<PostModel> updatePost(int id, PostModel post) =>
       postService.updatePost(id, post);
 
   Future<void> deletePost(int id) => postService.deletePost(id);

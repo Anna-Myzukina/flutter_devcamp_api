@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../normal_http/api/post_service.dart';
-import '../normal_http/model/post.dart';
+import '../normal_http/model/post_model.dart';
 
 class UpdatePostScreen extends StatefulWidget {
-  final Post post;
+  final PostModel post;
 
   const UpdatePostScreen({super.key, required this.post});
 
@@ -49,7 +49,7 @@ class _UpdatePostScreenState extends State<UpdatePostScreen> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                Post updatedPost = Post(
+                PostModel updatedPost = PostModel(
                   id: widget.post.id,
                   title: _titleController.text,
                   body: _bodyController.text,
