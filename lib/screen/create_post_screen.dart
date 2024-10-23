@@ -55,7 +55,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Post'),
+        title: const Text('Create Post'),
       ),
 body: Padding(
         padding: const EdgeInsets.all(16.0),

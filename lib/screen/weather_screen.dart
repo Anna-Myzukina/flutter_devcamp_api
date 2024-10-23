@@ -11,18 +11,18 @@ class WeatherScreen extends StatefulWidget {
 }
 
 class _WeatherScreenState extends State<WeatherScreen> {
+  String? _currentAddress;
+  Position? _currentPosition;
 
-    String? _currentAddress;
-    Position? _currentPosition;
-
-    Future<bool> _handleLocationPermission() async {
+  Future<bool> _handleLocationPermission() async {
     bool serviceEnabled;
     LocationPermission permission;
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Location services are disabled. Please enable the services')));
+          content: Text(
+              'Location services are disabled. Please enable the services')));
       return false;
     }
     permission = await Geolocator.checkPermission();
@@ -36,7 +36,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
     }
     if (permission == LocationPermission.deniedForever) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Location permissions are permanently denied, we cannot request permissions.')));
+          content: Text(
+              'Location permissions are permanently denied, we cannot request permissions.')));
       return false;
     }
     return true;
@@ -45,12 +46,14 @@ class _WeatherScreenState extends State<WeatherScreen> {
   Future<void> _getCurrentPosition() async {
     final hasPermission = await _handleLocationPermission();
     if (!hasPermission) return;
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((Position position) {
+    await Geolocator.getCurrentPosition()
+        .then((Position position) {
       setState(() => _currentPosition = position);
       // Log the coordinates
 
-    print('Current Position: Latitude: ${_currentPosition!.latitude}, Longitude: ${_currentPosition!.longitude}');
-      
+      // print(
+      //     'Current Position: Latitude: ${_currentPosition!.latitude}, Longitude: ${_currentPosition!.longitude}');
+
       _getAddressFromLatLng(_currentPosition!);
     }).catchError((e) {
       debugPrint(e);
@@ -64,49 +67,43 @@ class _WeatherScreenState extends State<WeatherScreen> {
   }
 
   Future<void> _getAddressFromLatLng(Position position) async {
-    await placemarkFromCoordinates(
-        position.latitude, position.longitude).then((List<Placemark> placemarks) {
+    await placemarkFromCoordinates(position.latitude, position.longitude)
+        .then((List<Placemark> placemarks) {
       Placemark place = placemarks[0];
       setState(() {
-        _currentAddress =
-            '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}, ${place.country}';
+        _currentAddress = '${place.locality} ,${place.country}';
+        //'${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}, ${place.country}';
       });
     }).catchError((e) {
       debugPrint(e);
     });
   }
 
-@override
-Widget build(BuildContext context) {
-  double customWidth = MediaQuery.of(context).size.width;
-  return Scaffold(
-    backgroundColor: const Color(0xFF2b2e54),
-    body: Padding(
-      padding: EdgeInsets.symmetric(
-      horizontal: customWidth * 0.1),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 60,
-          ),
-          Text('ADDRESS: ${_currentAddress ?? ""}',
-          style: TextStyle(
-            color: Colors.white
-          ),
-          ),
-          SizedBox(
-            //height: 650,
-            //width: customWidth * 0.8,
-            child: WeatherDisplayWidget(),
-          ),
-          
-        ],
+  @override
+  Widget build(BuildContext context) {
+    double customWidth = MediaQuery.of(context).size.width;
+    return Scaffold(
+      backgroundColor: const Color(0xFF2b2e54),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: customWidth * 0.1),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(
+              height: 60,
+            ),
+            // Text(
+            //   _currentAddress ?? "",
+            //   style: const TextStyle(color: Colors.white, fontSize: 25),
+            // ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height,
+              width: customWidth,
+              child: WeatherDisplayWidget(),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
-
-}
-
-

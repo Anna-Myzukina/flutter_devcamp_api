@@ -99,7 +99,7 @@ class HourlyForcastTile extends StatelessWidget {
                   const SizedBox(height: 5),
                   Text(
                     '$temp°',
-                    style:  TextStyle(color: Colors.white, fontSize: 45),
+                    style:  const TextStyle(color: Colors.white, fontSize: 45),
                   ),
                 ],
               ),

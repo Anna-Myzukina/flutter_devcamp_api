@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_devcamp_api/screen/my_home_screen.dart';
 import 'package:flutter_devcamp_api/screen/weather_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

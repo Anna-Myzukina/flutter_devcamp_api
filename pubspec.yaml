@@ -11,14 +11,17 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
+  geolocator: ^13.0.1
+  geocoding: ^3.0.0
+
+  
   http: ^1.2.2
   json_annotation: ^4.9.0
   json_serializable: ^6.8.0
-  geolocator: ^13.0.1
+  
   dio: ^5.7.0
   flutter_riverpod: ^2.6.1
   jiffy: ^6.3.1
-  geocoding: ^3.0.0
   # dio: ^5.7.0
   # retrofit: ^4.4.1
   # freezed: ^2.5.7

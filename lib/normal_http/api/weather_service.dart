@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_devcamp_api/services/getlocation_service.dart';
 import 'package:flutter_devcamp_api/normal_http/model/hourly_weather_model.dart';
 import 'package:flutter_devcamp_api/normal_http/model/weather_model.dart';
-import 'package:flutter_devcamp_api/normal_http/model/weekly_weather_model.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:flutter_devcamp_api/src/constants.dart' as constsant;
